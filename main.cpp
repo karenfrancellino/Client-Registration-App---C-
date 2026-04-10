@@ -2,52 +2,55 @@
 #include <string>
 #include <fstream>
 #include <limits>
-using namespace std;
 
-class Cliente{
-    private:
-        string nombre;
-        string apellidos;
-        int edad;
+class Cliente {
+private:
+    std::string nombre;
+    std::string apellidos;
+    int edad;
 
-    public:
-        Cliente() : nombre(""), apellidos(""), edad(0) {}
-        string obterDatos(){
-            return "Nombre: " + nombre + "\n" + "Apellidos: " + apellidos + "\n" + "edad: " + to_string(edad) + " años" + "\n";
-        }
-        Cliente(string nombre, string apellidos, int edad){
-            this->nombre = nombre;
-            this->apellidos = apellidos;
-            this->edad = edad;
-        }
+public:
+    Cliente() : nombre(""), apellidos(""), edad(0) {}
+
+    Cliente(const std::string& nombre, const std::string& apellidos, int edad)
+        : nombre(nombre), apellidos(apellidos), edad(edad) {}
+
+    std::string obtenerDatos() const {
+        return "Nombre: " + nombre + "\n" +
+               "Apellidos: " + apellidos + "\n" +
+               "Edad: " + std::to_string(edad) + " años\n";
+    }
 };
 
-int main(){
-    string nombre, apellidos;
+int main() {
+    std::string nombre, apellidos;
     int edad;
-    
-    cout << "Introduzca el nombre del cliente" "\n";
-    getline (cin, nombre);
 
-    cout << "Introduzca los apellidos del cliente" "\n";
-    getline (cin, apellidos);
+    std::cout << "Introduzca el nombre del cliente:\n";
+    std::getline(std::cin, nombre);
 
-    cout << "Introduzca la edad del cliente" "\n";
-    cin >> edad;
-     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Introduzca los apellidos del cliente:\n";
+    std::getline(std::cin, apellidos);
 
-    if (edad > 100){
-        cout << "La edad deve ser menor que 100 años";
-    } else {
-        Cliente cliente(nombre, apellidos, edad);
-        ofstream arquivo("cliente.txt", ios::app);
-        if (arquivo.is_open()){
-            arquivo << cliente.obterDatos() << endl;
-            cout << "Los datos del cliente se han añadido al archivo cliente.txt." << endl;
-            arquivo.close();
-        } else {
-            cout << "Error: No se pudo abrir el archivo cliente.txt." << endl;
-        }
+    std::cout << "Introduzca la edad del cliente:\n";
+    std::cin >> edad;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    if (edad <= 0 || edad > 100) {
+        std::cout << "La edad debe ser entre 1 y 100.\n";
+        return 1;
     }
-return 0;
+
+    Cliente cliente(nombre, apellidos, edad);
+
+    std::ofstream archivo("clientes.txt", std::ios::app);
+
+    if (archivo.is_open()) {
+        archivo << cliente.obtenerDatos() << "\n";
+        std::cout << "Cliente guardado correctamente en 'clientes.txt'.\n";
+    } else {
+        std::cout << "Error al abrir el archivo.\n";
+    }
+
+    return 0;
 }
